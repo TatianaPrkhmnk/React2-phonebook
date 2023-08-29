@@ -1,7 +1,7 @@
-// App.js
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-import Form from './Form/Form';
+import { Formik } from 'formik';
+import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 
 class App extends Component {
@@ -10,13 +10,14 @@ class App extends Component {
     name: '',
   };
 
-  handleChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+  handleNameChange = (event) => {
+    // const { name, value } = event.target;
+    this.setState({ name: event.target.value });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+
+  handleAddContact = () => {
+    // event.preventDefault();
 
     const { name } = this.state;
 
@@ -25,9 +26,13 @@ class App extends Component {
       return;
     }
 
-    const contact = { id: nanoid(), name };
+    const newContact = {
+      id: nanoid(),
+      name
+    };
+
     this.setState((prevState) => ({
-      contacts: [...prevState.contacts, contact],
+      contacts: [...prevState.contacts, newContact],
       name: '',
     }));
   };
@@ -36,9 +41,21 @@ class App extends Component {
     const { name, contacts } = this.state;
 
     return (
-      <div>
-        <Form name={name} onChange={this.handleChange} onSubmit={this.handleSubmit} />
-        
+      <div className="App">
+        <h1>Phone Book</h1>
+        <Formik
+          initialValues={{ name: '' }}
+          onSubmit={() => {}}
+        >
+          {({ handleSubmit }) => (
+            <ContactForm
+              name={name}
+              onNameChange={this.handleNameChange}
+              onAddContact={this.handleAddContact}
+              handleSubmit={handleSubmit}
+            />
+          )}
+        </Formik>
         <ContactList contacts={contacts} />
       </div>
     );
