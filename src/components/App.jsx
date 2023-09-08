@@ -1,71 +1,64 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-import { Formik } from 'formik';
+// import { Formik } from 'formik';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
+
 
 class App extends Component {
   state = {
-    contacts: [],
-    name: '',
-    number: ''
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
   };
 
-  handleNameChange = (event) => {
-    this.setState({ name: event.target.value });
-  };
 
-  onNumberChange = (event) => {
-    this.setState({ number: event.target.value });
+  handleFilterChange = (filter) => {
+    this.setState({ filter });
   }
 
-  handleAddContact = () => {
-    const { name, number } = this.state;
-     console.log('Проверка number:', number);
-
-    if (name.trim() === '' || number.trim() === '') {
+   handleAddContact = (contact) => {
+    if (contact.name.trim() === '' || contact.number.trim() === '') {
       alert('Німа контактів');
       return;
     }
 
     const newContact = {
       id: nanoid(),
-      name,
-      number
+      ...contact,
     };
-
 
     this.setState((prevState) => ({
       contacts: [...prevState.contacts, newContact],
-      name: '',
-      number: '',
     }));
   };
 
+  handleDeleteContact = (contactId) => {
+    this.setState((prevState) => ({
+      contacts: prevState.contacts.filter((contact) => contact.id !== contactId),
+    }));
+  };
   render() {
-    const { name, number, contacts } = this.state;
+    const { filter, contacts } = this.state;
+
+     const filteredContacts = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return (
-      <div className="App">
-        <h1>Phone Book</h1>
-        <Formik
-          initialValues={{ name: '' }}
-          onSubmit={(values, actions) => {}}
-        >
-          {({ handleSubmit }) => (
-            <ContactForm
-              name={name}
-              number={number}
-              onNameChange={this.handleNameChange}
-              onNumberChange={this.onNumberChange}
-              onAddContact={this.handleAddContact}
-              handleSubmit={handleSubmit}
-            />
-          )}
-        </Formik>
-        <ContactList contacts={contacts} />
+      <div>
+        <h1>Phonebook</h1>
+        <ContactForm onAddContact={this.handleAddContact} />
+        <h2>Contacts</h2>
+        <Filter filter={filter} onFilterChange={this.handleFilterChange}/>
+        <ContactList contacts={filteredContacts} onDeleteContact={this.handleDeleteContact}/>
       </div>
-    );
+    )
   }
 }
 

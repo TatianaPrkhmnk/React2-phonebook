@@ -1,4 +1,5 @@
 .nameInput {
+  width: 100%;
   display: block;
   margin-bottom: 50px;
   padding: 10px;
@@ -34,7 +35,7 @@
   opacity: 1;
 }
 
-button {
+.mainbtn {
   width: 100%;
   height: 50px;
   border: none;
@@ -47,7 +48,7 @@ button {
   border-radius: 10px;
 }
 
-button:before {
+.mainbtn:before {
   content: '';
   background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
   position: absolute;
@@ -68,15 +69,15 @@ button:before {
   color: #000;
 }
 
-button:active:after {
+.mainbtn:active:after {
   background: transparent;
 }
 
-button:hover:before {
+.mainbtn:hover:before {
   opacity: 1;
 }
 
-button:after {
+.mainbtn:after {
   z-index: -1;
   content: '';
   position: absolute;
